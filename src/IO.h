@@ -9,22 +9,6 @@
 #include <stdio.h>
 
 typedef enum {
-    ATT_IO_GET_FILE_SIZE_OK,
-    ATT_IO_GET_FILE_SIZE_BAD_FP,
-    ATT_IO_GET_FILE_SIZE_NOT_REGULAR_FILE,
-} AttIOGetFileSizeError;
-
-typedef struct {
-    size_t file_size;
-    AttIOGetFileSizeError error;
-} AttIOGetFileSizeResult;
-
-/**
- * \brief This function queries the size of an open regular file
- */
-AttIOGetFileSizeResult AttIOGetFileSizeFP(FILE* file);
-
-typedef enum {
     ATT_IO_READ_FILE_OK,
     ATT_IO_READ_FILE_OPEN_FAILED,
     ATT_IO_READ_FILE_READ_FAILED,
@@ -39,6 +23,6 @@ typedef struct {
 } AttIOReadFileBufferResult;
 
 /**
- * \brief This function opens a regular file and reads its contents as a byte array
+ * \brief Open a regular file and read its contents as a byte array
  */
 AttIOReadFileBufferResult AttIOReadFileBuffer(char const* file_name);
