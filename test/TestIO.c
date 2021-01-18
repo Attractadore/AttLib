@@ -2,25 +2,29 @@
 
 #include "unity.h"
 
-void test_AttIOReadFileBufferFileDoesNotExist() {
-    const AttIOReadFileBufferResult res = AttIOReadFileBuffer("file_that_does_not_exist.txt");
-    TEST_ASSERT_NULL(res.buffer);
-    TEST_ASSERT_EQUAL_size_t(0, res.buffer_size);
-    TEST_ASSERT_EQUAL(ATT_IO_READ_FILE_OPEN_FAILED, res.error);
+void test_AttIOReadBufferFileDoesNotExist() {
+    char const* const file_name = "file_that_does_not_exist.txt";
+
+    AttDynamicBuffer buffer = {0};
+    const AttError err = AttIOReadBuffer(file_name, &buffer);
+    TEST_ASSERT_EQUAL(ATT_ERROR_OPEN_FAILED, err);
+    TEST_ASSERT_NULL(buffer.data);
+    TEST_ASSERT_EQUAL_size_t(0, buffer.capacity);
+    TEST_ASSERT_EQUAL_size_t(0, buffer.size);
 }
 
-void test_AttIOReadFileBufferFileExists() {
+void test_AttIOReadBufferFileExists() {
     char const* const file_name = "file_that_exists.txt";
-
-    const AttIOReadFileBufferResult res = AttIOReadFileBuffer(file_name);
-
-    TEST_ASSERT_NOT_NULL(res.buffer);
-
     const char file_contents[] = "This is a file that exists\n";
 
-    TEST_ASSERT_EQUAL_size_t(sizeof(file_contents) - 1, res.buffer_size);
-    TEST_ASSERT_EQUAL_MEMORY(file_contents, res.buffer, res.buffer_size);
-    TEST_ASSERT_EQUAL(ATT_IO_READ_FILE_OK, res.error);
+    AttDynamicBuffer buffer = {0};
+    const AttError err = AttIOReadBuffer(file_name, &buffer);
+    TEST_ASSERT_EQUAL(ATT_OK, err);
+    TEST_ASSERT_NOT_NULL(buffer.data);
+    TEST_ASSERT_EQUAL_size_t(sizeof(file_contents) - 1, buffer.capacity);
+    TEST_ASSERT_EQUAL_size_t(sizeof(file_contents) - 1, buffer.size);
+    TEST_ASSERT_EQUAL_MEMORY(file_contents, buffer.data, buffer.capacity);
+    TEST_ASSERT_EQUAL(ATT_OK, err);
 
-    free(res.buffer);
+    AttDynamicBufferFree(&buffer);
 }

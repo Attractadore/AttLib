@@ -27,6 +27,7 @@ function(add_test_file TARGET TEST_FILE)
 endfunction()
 
 add_test_runner(TestIO "TestIO.c")
+target_sources(TestIO PRIVATE "${CMAKE_SOURCE_DIR}/src/Memory.c")
 add_test_file(TestIO "file_that_exists.txt")
 add_test(TestIORunner TestIO)
 
