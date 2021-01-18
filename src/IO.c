@@ -111,10 +111,8 @@ AttError AttIOReadDiskBuffer(FILE* const disk_file, AttBuffer* const result) {
     }
 #endif
 
-    AttError err = ATT_OK;
-
     size_t file_size = 0;
-    err = AttIOGetDiskSize(disk_file, &file_size);
+    const AttError err = AttIOGetDiskSize(disk_file, &file_size);
     if (err) {
         return err;
     }
